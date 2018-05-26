@@ -66,14 +66,15 @@ def button(bot, update):
                         [InlineKeyboardButton("« Back to data", callback_data='back_data-' + r)]]
 
         header_6 = "Which type of domains?"
-        keyboard_6 = [[InlineKeyboardButton("Active", callback_data='active_domains-' + r),
-                         InlineKeyboardButton("All", callback_data='all_domains-' + r)],
+        keyboard_6 = [[InlineKeyboardButton("Active", callback_data='active-' + r),
+                         InlineKeyboardButton("All", callback_data='all-' + r)],
                         [InlineKeyboardButton("« Back to actions", callback_data='back_get-' + r)]]
 
-        header_7 = "Which type of subdomains?"
-        keyboard_7 = [[InlineKeyboardButton("Active", callback_data='active_subdomains-' + r),
-                         InlineKeyboardButton("All", callback_data='all_subdomains-' + r)],
-                        [InlineKeyboardButton("« Back to actions", callback_data='back_get-' + r)]]
+        header_7 = "How many domains?"
+        keyboard_7 = [[InlineKeyboardButton("Top 20", callback_data='limit-' + r),
+                         InlineKeyboardButton("All", callback_data='nolimit-' + r)],
+                        [InlineKeyboardButton("« Back to actions", callback_data='back_data-' + r)]]
+
 
 	#ToDO: Transform into a swtich
 	if choice == "back":
@@ -123,10 +124,14 @@ def button(bot, update):
 
         if choice == "topdomais":
                 bot.edit_message_text(header_6, reply_markup=InlineKeyboardMarkup(keyboard_6), chat_id=query.message.chat_id, message_id=query.message.message_id)
-                return BUTTON
+                global subdomains
+		subdomains = False
+		return BUTTON
         elif choice == "subdomains":
-                bot.edit_message_text(header_7, reply_markup=InlineKeyboardMarkup(keyboard_7), chat_id=query.message.chat_id, message_id=query.message.message_id)
-                return BUTTON
+                bot.edit_message_text(header_6, reply_markup=InlineKeyboardMarkup(keyboard_6), chat_id=query.message.chat_id, message_id=query.message.message_id)
+                global subdomains
+		subdomains = True
+		return BUTTON
         elif choice == "contains":
 		bot.send_message(text="What is the search string?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
                 return CONTAINS
@@ -137,6 +142,39 @@ def button(bot, update):
                 bot.edit_message_text(header_5, reply_markup=InlineKeyboardMarkup(keyboard_5), chat_id=query.message.chat_id, message_id=query.message.message_id)
                 return BUTTON
 
+        if choice == "active":
+		global active
+		active = True
+                bot.edit_message_text(header_7, reply_markup=InlineKeyboardMarkup(keyboard_7), chat_id=query.message.chat_id, message_id=query.message.message_id)
+		return BUTTON
+        elif choice == "all":
+                global active
+                active = False
+                bot.edit_message_text(header_7, reply_markup=InlineKeyboardMarkup(keyboard_7), chat_id=query.message.chat_id, message_id=query.message.message_id)
+                return BUTTON
+
+        if choice == "nolimit":
+		global subdomains
+		if subdomains:
+                        global limit
+                        limit = False
+			bot.send_message(text="What is the (top)domain?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
+			return GET_DOMAINS
+		else:
+			global limit
+			limit = False
+			get_topdomains()
+        elif choice == "limit":
+                global subdomains
+                if subdomains:
+                        global limit
+                        limit = True
+                        bot.send_message(text="What is the (top)domain?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
+                        return GET_DOMAINS
+                else:
+                        global limit
+                        limit = True
+			get_topdomains()
 
 	if choice == "yes_scan":
 		bot.send_message(text="Starting a new scan...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
@@ -237,7 +275,7 @@ def edit_domain(bot, update):
 	return BUTTON
 
 
-def get_domains(bot, update):
+def get_domains():
 	print update.message.text
 	return BUTTON
 
