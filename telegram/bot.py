@@ -10,6 +10,9 @@ from random import randint
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 					level=logging.INFO)
 
+telegram_bot_token = "576071746:AAH2TYv_IDgh4r-bAnO9yE0LioSewbDuVPI"
+
+
 logger = logging.getLogger(__name__)
 
 BUTTON, CUSTOM_SCAN_ID_INPUT, ADD_DOMAIN, EDIT_DOMAIN, GET_DOMAINS, CONTAINS = range(6)
@@ -302,7 +305,7 @@ def cancel(bot, update):
 
 def main():
 	# Create the EventHandler and pass it your bot's token.
-	updater = Updater("576071746:AAH2TYv_IDgh4r-bAnO9yE0LioSewbDuVPI")
+	updater = Updater(telegram_bot_token)
 
 	# Get the dispatcher to register handlers
 	dp = updater.dispatcher

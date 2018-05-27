@@ -3,8 +3,18 @@
 import MySQLdb
 import sys
 
-connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+username = "rjp"
+password = "1484"
 
+connection = MySQLdb.connect (host = "localhost", user = username, passwd = password)
+
+cursor = connection.cursor ()
+
+cursor.execute ("""
+CREATE DATABASE recon;
+""")
+
+connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
 cursor = connection.cursor ()
 
 cursor.execute ("""
@@ -17,53 +27,11 @@ CREATE TABLE domains
     InScope bit NOT NULL DEFAULT 0,
     Domain varchar(100) not null,
     LastModified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    scan_Id int,
     PRIMARY KEY (DomainID),
     FOREIGN KEY (TopDomainID) REFERENCES domains(DomainID),
     UNIQUE (Domain)
 );
-""")
-
-cursor.execute ("""
-CREATE TABLE directories
-(
-    DirectoryID int NOT NULL AUTO_INCREMENT,
-    DomainID int NOT NULL,
-    Directory varchar(255) not null,
-    File bit NOT NULL DEFAULT 0,
-    Active bit NOT NULL DEFAULT 0,
-    LastModified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY (DirectoryID),
-    FOREIGN KEY (DomainID) REFERENCES domains(DomainID)
-);
-""")
-
-cursor.execute ("""
-CREATE TABLE crlf
-(
-    CRLFID int NOT NULL AUTO_INCREMENT,
-    DomainID int NOT NULL,
-    Payload varchar(255) not null,
-    Active bit NOT NULL DEFAULT 0,
-    LastModified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY (CRLFID),
-    FOREIGN KEY (DomainID) REFERENCES domains(DomainID)
-);
-
-""")
-
-cursor.execute ("""
-CREATE TABLE ports
-(
-    PortID int NOT NULL AUTO_INCREMENT,
-    DomainID int NOT NULL,
-    Port int NOT NULL,
-    PortInfo varchar(255),
-    Active bit NOT NULL DEFAULT 0,
-    LastModified timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY (PortID),
-    FOREIGN KEY (DomainID) REFERENCES domains(DomainID)
-);
-
 """)
 
 cursor.execute ("""
@@ -75,11 +43,21 @@ CREATE TABLE errors
     Error varchar(255),
     Script varchar(255),
     ErrorDate timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    scan_ID int,
     PRIMARY KEY (ErrorID)
 );
-
 """)
 
+
+cursor.execute ("""
+CREATE TABLE scans 
+( 
+	ScanID int NOT NULL AUTO_INCREMENT, 
+	StartDate datetime NOT NULL, 
+	EndDate datetime, 
+	primary key (ScanID) 
+);
+""")
 
 cursor.close ()
 connection.close ()

@@ -40,6 +40,26 @@ def run_subdomain_scan_on_target(top_domain_par = None):
 
 	os.system("python " + os.path.dirname(os.path.abspath(__file__)) + "/database/additional_tools/sublister_to_db.py " + top_domain + " NULL")
 
+def delete_top_domain():
+	print "What is the domain? "
+	top_domain = raw_input('[Domain] > ')
+
+        cursor.execute ("select * from domains where Domain = %s", (top_domain,))
+        data = cursor.fetchone()
+
+	top_domain = int(data[0])
+
+        cursor.execute("delete from domains where topDomainID = %s", (top_domain,))
+        connection.commit()
+
+        cursor.execute("delete from domains where DomainID = %s", (top_domain,))
+        connection.commit()
+
+        print bcolors.OKGREEN + "Domain with its subdomains deleted" + bcolors.ENDC
+        raw_input("\nPress any key to go back...")
+        start()
+
+
 def insert_topdomain(top_domain_par = None):
 	if top_domain_par is None:
 		print "What is the domain? "
@@ -150,11 +170,14 @@ def list_domains():
 	start()
 
 
+
+
 options = {1 : insert_topdomain,
            2 : list_subdomains,
            3 : list_domains,
            4 : insert_subdomain,
-	   5 : run_subdomain_scan_on_target
+	   5 : run_subdomain_scan_on_target,
+	   6 : delete_top_domain
 }
 
 
@@ -182,6 +205,7 @@ def start():
 3. List all (top)domains
 4. Add subdomain
 5. Run subdomain scan on top domain
+6. Delete a (top)domain
 """
 
 	print banner.format(bcolors.HEADER, domains, sub_domains, top_domains, bcolors.ENDC)

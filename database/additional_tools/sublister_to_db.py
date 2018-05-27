@@ -7,13 +7,13 @@ try:
 	cursor = connection.cursor()
 	scanId = sys.argv[2]
 
-	if not os.path.exists("/tmp/recon_domain_files"):
-		os.makedirs("/tmp/recon_domain_files")
+	if not os.path.exists("/tmp/ICU"):
+		os.makedirs("/tmp/ICU")
 
-	if not os.path.exists("/tmp/recon_domain_files/"+domain+"/"):
-	    os.makedirs("/tmp/recon_domain_files/"+domain+"/")
+	if not os.path.exists("/tmp/ICU/"+domain+"/"):
+	    os.makedirs("/tmp/ICU/"+domain+"/")
 
-	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../../dependencies/sublister/sublist3r.py -o /tmp/recon_domain_files/"+domain+"/domains-all.txt -d "+domain)
+	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../tools/dependencies/sublister/sublist3r.py -o /tmp/ICU/"+domain+"/domains-all.txt -d "+domain)
 
 	cursor.execute("select Domain, TopDomainID, Active, Program, DomainID, scan_Id from domains where TopDomainID = (select DomainID from domains where Domain = %s) or Domain = %s", (domain, domain))
 	database_data = cursor.fetchall()
@@ -23,12 +23,16 @@ try:
         program = [x[3] for x in database_data if x[0] == domain][0]
         topDomainID = [x[4] for x in database_data if x[0] == domain][0]
 
-	domains_all = open("/tmp/recon_domain_files/"+domain+"/domains-all.txt",'r').read().split('\n')
+	domains_all = open("/tmp/ICU/"+domain+"/domains-all.txt",'r').read().split('\n')
 	domains_all.extend(x for x in database_domains if x not in domains_all)
 
-	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../../tools/online.py /tmp/recon_domain_files/"+domain+"/domains-all.txt /tmp/recon_domain_files/"+domain+"/domains-online.txt")
+	domains_all_combined_file = open("/tmp/ICU/"+domain+"/domains-all-combined.txt", 'w')
+	for item in domains_all:
+		domains_all_combined_file.write("%s\n" % item)
 
-	domains_online = open("/tmp/recon_domain_files/"+domain+"/domains-online.txt",'r').read().split('\n')
+	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../tools/online.py /tmp/ICU/"+domain+"/domains-all-combined.txt /tmp/ICU/"+domain+"/domains-online.txt")
+
+	domains_online = open("/tmp/ICU/"+domain+"/domains-online.txt",'r').read().split('\n')
 
 	for sub_domain in domains_all:
 	        insertScanId = scanId if not [x[5] for x in database_data if x[0] == sub_domain] else [x[5] for x in database_data if x[0] == sub_domain][0]
