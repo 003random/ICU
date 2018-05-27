@@ -13,9 +13,9 @@ cursor.execute ("""
         """.format("domains"))
 
 if cursor.fetchone()[0] == 1:
-        print "[+] Table domains found"
+        print "    [+] Table domains found"
 else:
-	print "[-] Hmm... No table 'domains' was found in the database recon. Did you run the initialize script?"
+	print "    [-] Hmm... No table 'domains' was found in the database recon. Did you run the initialize script?"
 
 
 cursor.execute ("""
@@ -25,9 +25,9 @@ cursor.execute ("""
         """.format("errors"))
 
 if cursor.fetchone()[0] == 1:
-        print "[+] Table errors found"
+        print "    [+] Table errors found"
 else:
-        print "[-] Hmm... No table 'errors' was found in the database recon. Did you run the initialize script?"
+        print "    [-] Hmm... No table 'errors' was found in the database recon. Did you run the initialize script?"
 
 cursor.execute ("""
         SELECT COUNT(*)
@@ -36,9 +36,9 @@ cursor.execute ("""
         """.format("scans"))
 
 if cursor.fetchone()[0] == 1:
-        print "[+] Table scans found"
+        print "    [+] Table scans found"
 else:
-        print "[-] Hmm... No table 'scans' was found in the database recon. Did you run the initialize script?"
+        print "    [-] Hmm... No table 'scans' was found in the database recon. Did you run the initialize script?"
 
 
 cursor.close ()
