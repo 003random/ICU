@@ -1,8 +1,8 @@
 #!/usr/bin/python
 try:
-	import sys, os, MySQLdb, datetime
+	import sys, os, MySQLdb, datetime, credentials
 
-	connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 	cursor = connection.cursor ()
 
 	cursor.execute ("insert into scans (StartDate) values (CURRENT_TIMESTAMP)")
@@ -14,9 +14,9 @@ try:
 
 	for row in data:
 		print "Running sublister on " + row[0]
-		os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/database/additional_tools/sublister_to_db.py " + row[0] + " " + str(scanId))
+		os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/database/additional_tools/domains_db.py " + row[0] + " " + str(scanId))
 
-	connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 	cursor = connection.cursor ()
 	cursor.execute ("update scans set EndDate = CURRENT_TIMESTAMP where ScanID = %s", (scanId))
 	connection.commit()
@@ -25,5 +25,9 @@ try:
 	os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/telegram/notify.py " + str(scanId))
 except Exception, e:
 	print "error: " + str(e)
+
+	if not os.path.exists(os.path.dirname(os.path.abspath(__file__))  + "/logs"):
+                os.makedirs(os.path.dirname(os.path.abspath(__file__))  + "/logs")
+
 	with open(os.path.dirname(os.path.abspath(__file__))  + '/logs/run_logs.txt', 'w+') as the_file:
 		the_file.write(str(e) + "\n")

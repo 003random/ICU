@@ -1,8 +1,10 @@
 #!/usr/bin/python
 import os, sys, MySQLdb
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../")
+import credentials
 
 try:
-	connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 	domain = sys.argv[1].strip()
 	cursor = connection.cursor()
 	scanId = sys.argv[2]
@@ -13,8 +15,10 @@ try:
 	if not os.path.exists("/tmp/ICU/"+domain+"/"):
 	    os.makedirs("/tmp/ICU/"+domain+"/")
 
+	#Add new subdomain scanners here. Make sure to let them save the output to /tmp/ICU/{domain}/doains-all.txt
 	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../tools/dependencies/sublister/sublist3r.py -o /tmp/ICU/"+domain+"/domains-all.txt -d "+domain)
 
+	#Retrieve all info from a top domain and its subdomains, so we can use this data instead of opening new db connections later on
 	cursor.execute("select Domain, TopDomainID, Active, Program, DomainID, scan_Id from domains where TopDomainID = (select DomainID from domains where Domain = %s) or Domain = %s", (domain, domain))
 	database_data = cursor.fetchall()
 	database_domains = [d[0] for d in database_data]
@@ -23,34 +27,43 @@ try:
         program = [x[3] for x in database_data if x[0] == domain][0]
         topDomainID = [x[4] for x in database_data if x[0] == domain][0]
 
+	#All the domains from the subdomain scanners
 	domains_all = open("/tmp/ICU/"+domain+"/domains-all.txt",'r').read().split('\n')
+	#Add all the database subdomain to it
 	domains_all.extend(x for x in database_domains if x not in domains_all)
+	#Make it unique
+	domains_all = list(set(domains_all))
 
-	domains_all_combined_file = open("/tmp/ICU/"+domain+"/domains-all-combined.txt", 'w')
-	for item in domains_all:
-		domains_all_combined_file.write("%s\n" % item)
+	#Put all the online domains in a domains-online.txt
+	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../tools/online.py /tmp/ICU/"+domain+"/domains-all.txt /tmp/ICU/"+domain+"/domains-online.txt")
 
-	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../tools/online.py /tmp/ICU/"+domain+"/domains-all-combined.txt /tmp/ICU/"+domain+"/domains-online.txt")
-
+	#Convert online domains to array
 	domains_online = open("/tmp/ICU/"+domain+"/domains-online.txt",'r').read().split('\n')
 
+	#Loop through every subdomain
 	for sub_domain in domains_all:
+		#Get the scanID to insert. If the domains was already in the db and isnt changed, then keep the old scanID. otherwise use the scanID of the current scan
 	        insertScanId = scanId if not [x[5] for x in database_data if x[0] == sub_domain] else [x[5] for x in database_data if x[0] == sub_domain][0]
+
+		#If the subdomain is online
 		if sub_domain in domains_online:
 			active=True
+			#If the subdomain used to be offline, give it the current scanID
 			if sub_domain in non_active_subdomains:
 				insertScanId = scanId
 		else:
 			active=False
 
+
 		if sub_domain:
+			#Insert the new values, or update them if they already existed
 			cursor.execute("INSERT INTO domains (Program, TopDomainID, Active, InScope, Domain, scan_Id) VALUES (%s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE Active = %s, LastModified = now(), scan_Id = %s", (program, topDomainID, active, 1, sub_domain, insertScanId, active, insertScanId))
 			connection.commit()
-
 
 	cursor.close ()
 	connection.close ()
 except Exception as e:
+	#Handle the errors, and save them to the database
 	print "error in sublister_to_db.py with main domain; " + domain
 	cursor.execute("INSERT INTO errors (Domain, ErrorDescription, Error, Script, scan_Id) VALUES (%s, %s, %s, %s, %s) ", (domain, "error in sublister_to_db.py with main domain; "+domain, e, "sublister_to_db.py", scanId))
 	connection.commit()

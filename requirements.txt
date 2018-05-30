@@ -1,0 +1,15 @@
+mysql-python==1.2.3
+telegram==0.0.1
+python-telegram-bot==10.0.1
+
+
+# All the modules used are:
+
+# MySQLdb
+# telegram
+# random
+# sys
+# os
+# datetime
+# logging
+# time

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import os, sys, MySQLdb, time
+import credentials
 
 class bcolors:
     HEADER = '\033[95m'
@@ -12,9 +13,11 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 cursor = connection.cursor()
 
+def exit_program():
+	sys.exit()
 
 def list_subdomains():
 	sub_domain = raw_input('[Domain] > ')
@@ -80,8 +83,8 @@ def insert_topdomain(top_domain_par = None):
 	program = raw_input('[program] > ')
 
 	print "Inscope? "
-	inscope = raw_input('[Inscope] > ')
-	if "no" not in inscope.lower():
+	inscope = raw_input('[Y/n] > ')
+	if "n" not in inscope.lower():
 		inscope = 1
 	else:
 		inscope = 0
@@ -108,8 +111,8 @@ def insert_subdomain(top_domain_par = None):
 	if not data:
     		print bcolors.WARNING + "Domain not found!" + bcolors.ENDC
 		print "Do you want to add it? "
-		answer = raw_input('[yes/no] > ')
-		if "no" not in answer.lower():
+		answer = raw_input('[Y/n] > ')
+		if "n" not in answer.lower():
 			insert_topdomain(top_domain)
 		else:
 			raw_input("Press any key to go back...")
@@ -134,8 +137,8 @@ def insert_subdomain(top_domain_par = None):
 
 	if does_not_exist:
 		print "Inscope? "
-		inscope = raw_input('[Inscope] > ')
-		if "no" not in inscope.lower():
+		inscope = raw_input('[Y/n] > ')
+		if "n" not in inscope.lower():
 			inscope = 1
 		else:
 			inscope = 0
@@ -146,8 +149,8 @@ def insert_subdomain(top_domain_par = None):
 		print bcolors.OKGREEN + "Domain added" + bcolors.ENDC
 
 	print "Do you want to add another one?? "
-	another_one = raw_input('[yes/no] > ')
-	if "no" not in another_one.lower():
+	another_one = raw_input('[Y/n] > ')
+	if "n" not in another_one.lower():
 
 		insert_subdomain(top_domain)
 
@@ -177,7 +180,8 @@ options = {1 : insert_topdomain,
            3 : list_domains,
            4 : insert_subdomain,
 	   5 : run_subdomain_scan_on_target,
-	   6 : delete_top_domain
+	   6 : delete_top_domain,
+           7 : exit_program
 }
 
 
@@ -206,6 +210,7 @@ def start():
 4. Add subdomain
 5. Run subdomain scan on top domain
 6. Delete a (top)domain
+7. Exit
 """
 
 	print banner.format(bcolors.HEADER, domains, sub_domains, top_domains, bcolors.ENDC)

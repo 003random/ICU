@@ -1,9 +1,11 @@
 #!/usr/bin/python
-
 import MySQLdb
 import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import credentials
 
-connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 
 cursor = connection.cursor ()
 cursor.execute ("""

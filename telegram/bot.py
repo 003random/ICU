@@ -1,23 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import logging, datetime, MySQLdb, os, telegram
+import logging, datetime, MySQLdb, os, telegram, sys
 from telegram import (InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton)
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ConversationHandler, MessageHandler, Filters
 from random import randint
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import credentials
+
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
 					level=logging.INFO)
 
-telegram_bot_token = "576071746:AAH2TYv_IDgh4r-bAnO9yE0LioSewbDuVPI"
-
+telegram_bot_token = credentials.telegram_bot_token
 
 logger = logging.getLogger(__name__)
 
 BUTTON, CUSTOM_SCAN_ID_INPUT, ADD_DOMAIN, EDIT_DOMAIN, GET_DOMAINS, CONTAINS = range(6)
 
 def start(bot, update):
+	print "---------- Start -----------"
+	if str(update.message.chat_id) != str(credentials.telegram_chat_id):
+		update.message.reply_text("Not authorized! If you think this is a mistake, please check if your chat_id is in credentials.py. You can also run setup.py in /telegram to setup the right credentials for your telegram.")
+		return
+
 	user = update.message.from_user
 	hour = datetime.datetime.now().hour
 	greeting = "Good morning " + str(user['first_name']) if 5<=hour<12 else "Good afternoon " + str(user['first_name']) if hour<18 else "Good evening " + str(user['first_name'])
@@ -35,8 +42,6 @@ def start(bot, update):
 def button(bot, update):
 	query = update.callback_query
 	#each callback_data attr has a random int after the '-' to make the button unique each time so the spinning loading circle goes away after returning to an excisting button
-
-	print "button func called with: " + query.data
 	choice = query.data.split('-')[0]
 	r = str(randint(0, 99))
 
@@ -85,6 +90,7 @@ def button(bot, update):
 		return BUTTON
 	elif choice == "close":
 		bot.edit_message_text("/start", chat_id=query.message.chat_id, message_id=query.message.message_id)
+		return ConversationHandler.END
 	elif choice == "scan":
 		bot.edit_message_text(header_2, reply_markup=InlineKeyboardMarkup(keyboard_2), chat_id=query.message.chat_id, message_id=query.message.message_id)
 		return BUTTON
@@ -92,7 +98,7 @@ def button(bot, update):
 		bot.edit_message_text(header_3, reply_markup=InlineKeyboardMarkup(keyboard_3), chat_id=query.message.chat_id, message_id=query.message.message_id)
 		return BUTTON
 
-	connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 	cursor = connection.cursor ()
 
 	if choice == "latest":
@@ -221,18 +227,22 @@ def run_scan(bot, update, cursor):
 	query = update.callback_query
 	cursor.execute ("SELECT * FROM scans ORDER BY ScanID DESC LIMIT 1")
 	data = cursor.fetchall()
-	if data[0][2] != None:
+	try:
+		if data[0][2] != None:
+			bot.send_message(text="Starting a new scan...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
+			os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/../run.py")
+		else:
+			r = str(randint(0, 99))
+	        	header_4 = "It looks like a scan is already running. Want to start a new one?"
+        		keyboard_4 = [[InlineKeyboardButton("Yes", callback_data='yes_scan-' + r),
+                		         InlineKeyboardButton("No", callback_data='no_scan-' + r)],
+                        		[InlineKeyboardButton("« Back to scans", callback_data='back_scan-' + r)]]
+			bot.edit_message_text(header_4, reply_markup=InlineKeyboardMarkup(keyboard_4), chat_id=query.message.chat_id, message_id=query.message.message_id)
+			return BUTTON
+	except Exception, e:
+		print "error: " + str(e)
 		bot.send_message(text="Starting a new scan...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
-		#os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/../run.py")
-	else:
-		r = str(randint(0, 99))
-	        header_4 = "It looks like a scan is already running. Want to start a new one?"
-        	keyboard_4 = [[InlineKeyboardButton("Yes", callback_data='yes_scan-' + r),
-                	         InlineKeyboardButton("No", callback_data='no_scan-' + r)],
-                        	[InlineKeyboardButton("« Back to scans", callback_data='back_scan-' + r)]]
-
-		bot.edit_message_text(header_4, reply_markup=InlineKeyboardMarkup(keyboard_4), chat_id=query.message.chat_id, message_id=query.message.message_id)
-                return BUTTON
+		os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/../run.py")
 
 
 def custom_scan_id_input(bot, update):
@@ -245,7 +255,7 @@ def custom_scan_id_input(bot, update):
 		update.message.reply_text("Not a valid number")
 	else:
 		print "valid number"
-        	connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+		connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
         	cursor = connection.cursor ()
 	        cursor.execute ("SELECT EndDate FROM scans where scanID = %s", (customId))
 	        data = cursor.fetchall()

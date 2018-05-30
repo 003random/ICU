@@ -1,12 +1,18 @@
 #!/usr/bin/python
 
-import sys, datetime, MySQLdb, telegram
+import sys, datetime, MySQLdb, telegram, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+import credentials
 
-bot = telegram.Bot('576071746:AAH2TYv_IDgh4r-bAnO9yE0LioSewbDuVPI')
+if credentials.telegram_bot_token == "" or credentials.telegram_chat_id == "":
+	print "[+] No telegram bot token and/or telegram chat id set in credentials.py"
+	sys.exit()
+
+bot = telegram.Bot(credentials.telegram_bot_token)
 scanId = sys.argv[1]
 message = "*" + str(datetime.datetime.now().replace(microsecond=0)) + "*"
 
-connection = MySQLdb.connect (host = "localhost", user = "rjp", passwd = "1484", db = "recon")
+connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 cursor = connection.cursor()
 
 cursor.execute ("select * from domains where scan_Id = %s and Active order by TopDomainID", (scanId))
@@ -36,4 +42,4 @@ elif len(newSubDomains) == 1:
 
 message += ""
 
-bot.send_message(chat_id=476443218, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
+bot.send_message(chat_id=credentials.telegram_chat_id, text=message, parse_mode=telegram.ParseMode.MARKDOWN)
