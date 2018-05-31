@@ -41,7 +41,7 @@ def run_subdomain_scan_on_target(top_domain_par = None):
 	else:
 		top_domain = top_domain_par
 
-	os.system("python " + os.path.dirname(os.path.abspath(__file__)) + "/database/additional_tools/sublister_to_db.py " + top_domain + " NULL")
+	os.system("python " + os.path.dirname(os.path.abspath(__file__)) + "/database/additional_tools/domains_db.py " + top_domain + " NULL")
 
 def delete_top_domain():
 	print "What is the domain? "
