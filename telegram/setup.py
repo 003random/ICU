@@ -45,6 +45,8 @@ def main():
 	updater = Updater(telegram_bot_token)
 	dp = updater.dispatcher
 
+	print "[!] Send /start to the bot."
+
 	conv_handler = ConversationHandler(
 		entry_points=[CommandHandler('start', start)],
 
