@@ -9,7 +9,7 @@ echo "[?] Do you want to pip install the requirements.txt?"
 echo "[Y/n]"
 read choice_pip_requirements
 
-if [ $choice_pip_requirements = "Y" ] || [ $choice_pip_requirements = "y" ] || [ -z $choice_pip_requirements ]; then
+if [ "$choice_pip_requirements" == "Y" ] || [ "$choice_pip_requirements" == "y" ] || [ -z "$choice_pip_requirements" ]; then
         pip install -r requirements.txt
 else
 	echo"[!] Make sure you have the right modules installed. You can check which modules are used in requirements.txt"
@@ -42,6 +42,8 @@ python database/init_db.py
 echo "[+] Checking if the database was created successfully"
 python database/db_test.py
 
+echo "----------------------------------------------------------------"
+
 echo "[+] Adding a cron task to run 'run.py' every 12 hours. You can edit this with the command 'crontab -e'"
 echo "[?] Adding the path to crontab. If this isn't the right path to the file, please edit this with the command 'crontab -e'"
 #write out current crontab
@@ -51,8 +53,25 @@ echo "0 */12 * * * python $(pwd)/run.py" >> mycron
 #install new cron file
 crontab mycron
 rm mycron
+echo "[+] Crontab task created!"
+
+echo "----------------------------------------------------------------"
+
+echo "[?] Do you want to create ICU.php? A simple web interface for the domains."
+echo "[Y/n]"
+read choice_web
+
+if [ "$choice_web" == "Y" ] || [ "$choice_web" == "y" ] || [ -z "$choice_web" ]; then
+        ./web/setup.sh "$database_username" "$database_password" "$database_server"
+	echo "[+] ICU.php was added."
+fi
+
+echo "----------------------------------------------------------------"
 
 echo "[!] All set!"
+
+echo "----------------------------------------------------------------"
+
 echo "[+] If you want to use the telegram options, please add your telegram bot token in credentials.py."
 echo "[?] Do you want to run main.py? This script lets you manage your domains."
 echo "[Y/n]"
