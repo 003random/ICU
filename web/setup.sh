@@ -64,7 +64,11 @@ if (\$result->num_rows > 0) {
                                 <ul class=\"submenu\">';
                                         \$domain[1] = array_reverse(\$domain[1], true);
                                         foreach (\$domain[1] as \$d) {
-                                                echo '<li class=\"subdomain\" added=\"'.\$d[\"LastModified\"].'\" active=\"'.\$d[\"Active\"].'\" inscope=\"'.\$d[\"InScope\"].'\" program=\"'.\$d[\"Program\"].'\"><a href=\"#\">'.\$d[\"Domain\"].'</a></li>';
+                                                if((string)\$d[\"Active\"] == \"0\"){
+                                                        echo '<li  class=\"subdomain\" added=\"'.\$d[\"LastModified\"].'\" active=\"'.\$d[\"Active\"].'\" inscope=\"'.\$d[\"InScope\"].'\" program=\"'.\$d[\"Program\"].'\"><del><a href=\"#\">'.\$d[\"Domain\"].'</a></del></li>';
+                                                } else {
+                                                        echo '<li class=\"subdomain\" added=\"'.\$d[\"LastModified\"].'\" active=\"'.\$d[\"Active\"].'\" inscope=\"'.\$d[\"InScope\"].'\" program=\"'.\$d[\"Program\"].'\"><a href=\"#\">'.\$d[\"Domain\"].'</a></li>';
+                                                }
                                         }
                         echo '</ul></li>';
                         }

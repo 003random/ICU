@@ -18,6 +18,15 @@ try:
 	#Add new subdomain scanners here. Make sure to let them save the output to /tmp/ICU/{domain}/doains-all.txt
 	os.system(os.path.dirname(os.path.abspath(__file__)) + "/../../tools/dependencies/sublister/sublist3r.py -o /tmp/ICU/"+domain+"/domains-all.txt -d "+domain)
 	time.sleep(2)
+
+	#Subfinder
+	os.system("subfinder -d " + domain + " -v -o /tmp/ICU/"+domain+"/domains-subfinder.txt --timeout 6")
+	time.sleep(2)
+
+	#Amass
+	os.system("amass -o /tmp/ICU/"+domain+"/domains-amass.txt -d " + domain)
+        time.sleep(2)
+
 	#Retrieve all info from a top domain and its subdomains, so we can use this data instead of opening new db connections later on
 	cursor.execute("select Domain, TopDomainID, Active, Program, DomainID, scan_Id from domains where TopDomainID = (select DomainID from domains where Domain = %s) or Domain = %s", (domain, domain))
 	database_data = cursor.fetchall()
@@ -29,6 +38,16 @@ try:
 
 	#All the domains from the subdomain scanners
 	domains_all = open("/tmp/ICU/"+domain+"/domains-all.txt",'r').read().split('\n')
+
+	#Domains from subfinder
+	domains_subfinder = open("/tmp/ICU/"+domain+"/domains-subfinder.txt",'r').read().split('\n')
+
+        #Domains from amass
+        domains_subfinder = open("/tmp/ICU/"+domain+"/domains-amass.txt",'r').read().split('\n')
+
+        #Add all the subfinder subdomain to it
+        domains_all.extend(x for x in domains_subfinder if x not in domains_all)
+
 	#Add all the database subdomain to it
 	domains_all.extend(x for x in database_domains if x not in domains_all)
 	#Make it unique
