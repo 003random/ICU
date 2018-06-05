@@ -2,7 +2,8 @@
 {{ Description }} 
 
 # Install 
-```bash ./install.sh ``` The installation script asks for various things, including your MySQL database username and password. These will be saved in credentials.py. You can always change these credentials later on. 
+```bash ./install.sh ```  
+The installation script asks for various things, including your MySQL database username and password. These will be saved in credentials.py. You can always change these credentials later on. 
 
 ## Optional (recommended)
 ICU also uses [Subfinder]("https://github.com/Ice3man543/subfinder") and [Amass]("https://github.com/caffix/amass/"). 
