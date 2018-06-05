@@ -2,7 +2,11 @@
 {{ Description }} 
 
 # Install 
-```bash ./install.sh ```  
+```
+git clone https://github.com/003random/ICU  
+cd ICU
+./install.sh 
+```  
 The installation script asks for various things, including your MySQL database username and password. These will be saved in credentials.py. You can always change these credentials later on. 
 
 ## Optional (recommended)
