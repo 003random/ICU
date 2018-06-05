@@ -13,7 +13,7 @@ try:
 	connection.close()
 
 	for row in data:
-		print "Running sublister on " + row[0]
+		print "Starting subdomain scans on " + row[0]
 		os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/database/additional_tools/domains_db.py " + row[0] + " " + str(scanId))
 
 	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
