@@ -4,9 +4,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../")
 import credentials
 
 try:
-	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 	domain = sys.argv[1].strip()
-	cursor = connection.cursor()
 	scanId = sys.argv[2]
 
 	if not os.path.exists("/tmp/ICU"):
@@ -30,6 +28,10 @@ try:
 	except Exception as e:
 		print "An error occured; You probably dont have either subfinder or amass installed. Check the README.md to see you how to install them. Error: "
 		print str(e)
+
+
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
+	cursor = connection.cursor()
 
 	#Retrieve all info from a top domain and its subdomains, so we can use this data instead of opening new db connections later on
 	cursor.execute("select Domain, TopDomainID, Active, Program, DomainID, scan_Id from domains where TopDomainID = (select DomainID from domains where Domain = %s) or Domain = %s", (domain, domain))
