@@ -13,7 +13,7 @@ if [ "$choice_pip_requirements" == "Y" ] || [ "$choice_pip_requirements" == "y" 
         pip install -r requirements.txt
 	sudo apt-get install python-mysqldb
 else
-	echo"[!] Make sure you have the right modules installed. You can check which modules are used in requirements.txt"
+	echo "[!] Make sure you have the right modules installed. You can check which modules are used in requirements.txt"
 fi
 
 echo "----------------------------------------------------------------"

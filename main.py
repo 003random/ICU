@@ -19,6 +19,20 @@ cursor = connection.cursor()
 def exit_program():
 	sys.exit()
 
+
+def list_scan_domains():
+        scan_id = raw_input('[Scan ID] > ')
+        cursor.execute ("select Domain, Program from domains where scan_Id = %s", (scan_id,))
+        data = cursor.fetchall()
+
+        for row in data:
+	        print bcolors.BOLD + row[0] + bcolors.ENDC +  " - " +  bcolors.OKGREEN +  row[1] + bcolors.ENDC
+
+        raw_input("\nPress any key to go back...")
+        start()
+
+
+
 def list_subdomains():
 	sub_domain = raw_input('[Domain] > ')
 	cursor.execute ("select Domain, Active from domains where TopDomainID = (select DomainID from domains where Domain = %s) order by Domain", (sub_domain,))
@@ -32,6 +46,12 @@ def list_subdomains():
 
 	raw_input("\nPress any key to go back...")
 	start()
+
+
+def run_scan():
+	print "[!] Running scan..."
+        os.system("python " + os.path.dirname(os.path.abspath(__file__)) + "/run.py")
+
 
 
 def run_subdomain_scan_on_target(top_domain_par = None):
@@ -96,6 +116,8 @@ def insert_topdomain(top_domain_par = None):
 	print bcolors.OKGREEN + "Domain added" + bcolors.ENDC
 	raw_input("\nPress any key to go back...")
 	start()
+
+
 
 
 def insert_subdomain(top_domain_par = None):
@@ -181,7 +203,9 @@ options = {1 : insert_topdomain,
            4 : insert_subdomain,
 	   5 : run_subdomain_scan_on_target,
 	   6 : delete_top_domain,
-           7 : exit_program
+           7 : list_scan_domains,
+           8 : run_scan,
+           9 : exit_program
 }
 
 
@@ -210,7 +234,9 @@ def start():
 4. Add subdomain
 5. Run subdomain scan on top domain
 6. Delete a (top)domain
-7. Exit
+7. Get domains from scan ID 
+8. Run scan on all domains
+9. Exit
 """
 
 	print banner.format(bcolors.HEADER, domains, sub_domains, top_domains, bcolors.ENDC)
