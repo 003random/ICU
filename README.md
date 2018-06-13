@@ -4,7 +4,7 @@ ICU is a tool to constantly keep an updated database of domains and subdomains, 
 ICU works by creating a database with domains and a crontask to launch the subdomain scanners script. You can launch this script manually as well. You can also keep control of your domains and subdomains with the main.py script or with the telegram bot. There is also a simple web application that is meant for a quick view of your domains. This web application is not meant yet for a large number of domains.  
 
   
-  ![main.py](![main.py](https://poc-server.com/github/ICU/main.py.png) )
+![main.py](https://poc-server.com/github/ICU/main.py.png)
   
 # Install 
 ```
