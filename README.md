@@ -23,6 +23,8 @@ go get github.com/Ice3man543/subfinder
 
 # Telegram 
 ICU also includes a telegram bot and notifications part. If you want to use this, you will have to include your telegram bot token in credentials.py. You can get a telegram bot token [here]("https://core.telegram.org/bots#3-how-do-i-create-a-bot"). Next off, you need to run setup.py in /telegram, and then send /start to the bot. This will save your chat_id to credentials.py so it can be used for authentication with the bot, and to send the notifications to.  
+
+![Telegram Bot](https://poc-server.com/github/ICU/telegram_ICU.png)
  
 # Modules 
 The following modules are used: MySQLdb, telegram, random, sys, os, datetime, logging, time. 
