@@ -11,6 +11,7 @@ read choice_pip_requirements
 
 if [ "$choice_pip_requirements" == "Y" ] || [ "$choice_pip_requirements" == "y" ] || [ -z "$choice_pip_requirements" ]; then
         pip install -r requirements.txt
+	sudo apt-get install python-mysqldb
 else
 	echo"[!] Make sure you have the right modules installed. You can check which modules are used in requirements.txt"
 fi
