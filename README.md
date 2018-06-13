@@ -32,7 +32,7 @@ The install script offers an option to install the modules from requirements.txt
 # Extra
 To get ICU up and running, requires some simple skills. If you need serious help, you can contact me via twitter.  
  
-![online.py](https://poc-server.com/github/ICU/online.gif) 
+![main.py](https://poc-server.com/github/ICU/main.py.png) 
  
 # Credits 
 Credits to:  
