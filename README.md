@@ -40,7 +40,7 @@ Credits to:
 # Images  
 ![main.py](https://poc-server.com/github/ICU/main.py.png)
   ___  
-![Telegram Bot](https://poc-server.com/github/ICU/telegram_ICU.png)
+![Telegram Bot](https://poc-server.com/github/ICU/telegrambot.png)
 
  
 *Created by [003random](http://hackerone.com/003random) - [@003random](https://twitter.com/rub003) - [003random.com](https://poc-server.com/blog/)*  
