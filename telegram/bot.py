@@ -48,7 +48,7 @@ def button(bot, update):
 	header_1 = "Catagory:"
 	keyboard_1 = [[InlineKeyboardButton("Data", callback_data='data-' + r),
 			 InlineKeyboardButton("Scans", callback_data='scan-' + r)],
-			[InlineKeyboardButton("âœ˜ Close", callback_data='close-' + r)]]
+			[InlineKeyboardButton("✘  Close", callback_data='close-' + r)]]
 
 	header_2 = "Action:"
 	keyboard_2 = [[InlineKeyboardButton("Latest", callback_data='latest-' + r),
@@ -325,7 +325,7 @@ def get_topdomains(bot, update):
 	bot.send_message(chat_id=credentials.telegram_chat_id, text=domains_message, parse_mode=telegram.ParseMode.MARKDOWN)
         keyboard = [[InlineKeyboardButton("Data", callback_data='data-' + str(randint(0, 999))),
                          InlineKeyboardButton("Scans", callback_data='scan-' + str(randint(0, 999)))],
-                        [InlineKeyboardButton("âœ˜ Close", callback_data='close-' + str(randint(0, 999)))]]
+                        [InlineKeyboardButton("✘ Close", callback_data='close-' + str(randint(0, 999)))]]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
 	bot.send_message(chat_id=credentials.telegram_chat_id, text="Hi again!", reply_markup=reply_markup)
@@ -368,7 +368,7 @@ def get_domains(bot, update):
 
         keyboard = [[InlineKeyboardButton("Data", callback_data='data-' + str(randint(0, 999))),
                          InlineKeyboardButton("Scans", callback_data='scan-' + str(randint(0, 999)))],
-                        [InlineKeyboardButton("âœ˜ Close", callback_data='close-' + str(randint(0, 999)))]]
+                        [InlineKeyboardButton("✘  Close", callback_data='close-' + str(randint(0, 999)))]]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text("Hi again :wave:", reply_markup=reply_markup)
