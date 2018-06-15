@@ -31,7 +31,7 @@ def start(bot, update):
 
 	keyboard = [[InlineKeyboardButton("Data", callback_data='data-' + str(randint(0, 999))),
 			 InlineKeyboardButton("Scans", callback_data='scan-' + str(randint(0, 999)))],
-			[InlineKeyboardButton("✘ Close", callback_data='close-' + str(randint(0, 999)))]]
+			[InlineKeyboardButton("âœ˜ Close", callback_data='close-' + str(randint(0, 999)))]]
 
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	update.message.reply_text(greeting, reply_markup=reply_markup)
@@ -48,40 +48,40 @@ def button(bot, update):
 	header_1 = "Catagory:"
 	keyboard_1 = [[InlineKeyboardButton("Data", callback_data='data-' + r),
 			 InlineKeyboardButton("Scans", callback_data='scan-' + r)],
-			[InlineKeyboardButton("✘ Close", callback_data='close-' + r)]]
+			[InlineKeyboardButton("âœ˜ Close", callback_data='close-' + r)]]
 
 	header_2 = "Action:"
 	keyboard_2 = [[InlineKeyboardButton("Latest", callback_data='latest-' + r),
 			 InlineKeyboardButton("Custom", callback_data='custom-' + r),
 			 InlineKeyboardButton("Run", callback_data='run-' + r)],
-			[InlineKeyboardButton("« Back to catagories", callback_data='back-' + r)]]
+			[InlineKeyboardButton("Â« Back to catagories", callback_data='back-' + r)]]
 
 	header_3 = "Action:"
 	keyboard_3 = [[InlineKeyboardButton("Add", callback_data='add-' + r),
 			 InlineKeyboardButton("Edit", callback_data='edit-' + r),
 			 InlineKeyboardButton("Get", callback_data='get-' + r)],
-			[InlineKeyboardButton("« Back to catagories", callback_data='back-' + r)]]
+			[InlineKeyboardButton("Â« Back to catagories", callback_data='back-' + r)]]
 
         header_4 = "It looks like a scan is already running. Want to start a new one?"
         keyboard_4 = [[InlineKeyboardButton("Yes", callback_data='yes_scan-' + r),
                          InlineKeyboardButton("No", callback_data='no_scan-' + r)],
-                        [InlineKeyboardButton("« Back to scans", callback_data='back_scan-' + r)]]
+                        [InlineKeyboardButton("Â« Back to scans", callback_data='back_scan-' + r)]]
 
         header_5 = "Action:"
         keyboard_5 = [[InlineKeyboardButton("(top)Domains", callback_data='topdomains-' + r),
                          InlineKeyboardButton("Subdomains", callback_data='subdomains-' + r),
 			 InlineKeyboardButton("Contains", callback_data='contains-' + r)],
-                        [InlineKeyboardButton("« Back to data", callback_data='back_data-' + r)]]
+                        [InlineKeyboardButton("Â« Back to data", callback_data='back_data-' + r)]]
 
         header_6 = "Which type of domains?"
         keyboard_6 = [[InlineKeyboardButton("Active", callback_data='active-' + r),
                          InlineKeyboardButton("All", callback_data='all-' + r)],
-                        [InlineKeyboardButton("« Back to actions", callback_data='back_get-' + r)]]
+                        [InlineKeyboardButton("Â« Back to actions", callback_data='back_get-' + r)]]
 
         header_7 = "How many domains?"
         keyboard_7 = [[InlineKeyboardButton("Top 20", callback_data='limit-' + r),
                          InlineKeyboardButton("All", callback_data='nolimit-' + r)],
-                        [InlineKeyboardButton("« Back to actions", callback_data='back_data-' + r)]]
+                        [InlineKeyboardButton("Â« Back to actions", callback_data='back_data-' + r)]]
 
 
 	#ToDO: Transform into a swtich
@@ -118,23 +118,26 @@ def button(bot, update):
         if choice == "add":
                 cursor.close()
                 connection.close()
-		bot.send_message(text="What is the domain?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
-		return ADD_DOMAIN
+		bot.send_message(text="Coming soon, pr's are welcome...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
+		return BUTTON
+		#return ADD_DOMAIN
         elif choice == "edit":
                 cursor.close()
                 connection.close()
-		bot.send_message(text="What is the domain?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
-                return EDIT_DOMAIN
+		bot.send_message(text="Coming soon...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
+                return BUTTON
+		#return EDIT_DOMAIN
         elif choice == "get":
                 cursor.close()
                 connection.close()
                 bot.edit_message_text(header_5, reply_markup=InlineKeyboardMarkup(keyboard_5), chat_id=query.message.chat_id, message_id=query.message.message_id)
                 return BUTTON
 
-        if choice == "topdomais":
-                bot.edit_message_text(header_6, reply_markup=InlineKeyboardMarkup(keyboard_6), chat_id=query.message.chat_id, message_id=query.message.message_id)
+        if choice == "topdomains":
+                bot.edit_message_text(header_7, reply_markup=InlineKeyboardMarkup(keyboard_7), chat_id=query.message.chat_id, message_id=query.message.message_id)
                 global subdomains
 		subdomains = False
+		print "choice = topdomains"
 		return BUTTON
         elif choice == "subdomains":
                 bot.edit_message_text(header_6, reply_markup=InlineKeyboardMarkup(keyboard_6), chat_id=query.message.chat_id, message_id=query.message.message_id)
@@ -142,8 +145,9 @@ def button(bot, update):
 		subdomains = True
 		return BUTTON
         elif choice == "contains":
-		bot.send_message(text="What is the search string?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
-                return CONTAINS
+		bot.send_message(text="Coming soon...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
+                return BUTTON
+		#return CONTAINS
         elif choice == "back_data":
                 bot.edit_message_text(header_3, reply_markup=InlineKeyboardMarkup(keyboard_3), chat_id=query.message.chat_id, message_id=query.message.message_id)
                 return BUTTON
@@ -163,6 +167,7 @@ def button(bot, update):
                 return BUTTON
 
         if choice == "nolimit":
+		print "Nolimit"
 		global subdomains
 		if subdomains:
                         global limit
@@ -170,20 +175,24 @@ def button(bot, update):
 			bot.send_message(text="What is the (top)domain?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
 			return GET_DOMAINS
 		else:
+			print "topdomain"
 			global limit
 			limit = False
-			get_topdomains()
+			get_topdomains(bot, update)
+
         elif choice == "limit":
                 global subdomains
+		print "Limit"
                 if subdomains:
                         global limit
                         limit = True
                         bot.send_message(text="What is the (top)domain?", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
                         return GET_DOMAINS
                 else:
+			print "Topdomain"
                         global limit
                         limit = True
-			get_topdomains()
+			get_topdomains(bot, update)
 
 	if choice == "yes_scan":
 		bot.send_message(text="Starting a new scan...", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
@@ -236,7 +245,7 @@ def run_scan(bot, update, cursor):
 	        	header_4 = "It looks like a scan is already running. Want to start a new one?"
         		keyboard_4 = [[InlineKeyboardButton("Yes", callback_data='yes_scan-' + r),
                 		         InlineKeyboardButton("No", callback_data='no_scan-' + r)],
-                        		[InlineKeyboardButton("« Back to scans", callback_data='back_scan-' + r)]]
+                        		[InlineKeyboardButton("Â« Back to scans", callback_data='back_scan-' + r)]]
 			bot.edit_message_text(header_4, reply_markup=InlineKeyboardMarkup(keyboard_4), chat_id=query.message.chat_id, message_id=query.message.message_id)
 			return BUTTON
 	except Exception, e:
@@ -288,9 +297,85 @@ def edit_domain(bot, update):
 	return BUTTON
 
 
-def get_domains():
-	print update.message.text
+def get_topdomains(bot, update):
+	global limit
+	print "Inside get_topdomains"
+
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
+	cursor = connection.cursor ()
+
+	if limit == True:
+		cursor.execute ("select Domain from domains where TopDomainID is NULL order by Domain limit 20")	
+	else:
+		cursor.execute ("select Domain from domains where TopDomainID is NULL order by Domain")
+
+
+        data = cursor.fetchall()
+        cursor.close()
+        connection.close()
+
+        domains_message = ""
+
+        if not data:
+                domains_message = "No domains found"
+
+        for row in data:
+                domains_message += "\n" + row[0]
+
+	bot.send_message(chat_id=credentials.telegram_chat_id, text=domains_message, parse_mode=telegram.ParseMode.MARKDOWN)
+        keyboard = [[InlineKeyboardButton("Data", callback_data='data-' + str(randint(0, 999))),
+                         InlineKeyboardButton("Scans", callback_data='scan-' + str(randint(0, 999)))],
+                        [InlineKeyboardButton("âœ˜ Close", callback_data='close-' + str(randint(0, 999)))]]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+	bot.send_message(chat_id=credentials.telegram_chat_id, text="Hi again!", reply_markup=reply_markup)
+        return BUTTON
+
+
+
+def get_domains(bot, update):
+	global active
+	global limit
+	print "active: " + str(active)
+	print "limit: " + str(limit)
+	print "domain: " + update.message.text
+
+	connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
+	cursor = connection.cursor ()
+
+	cursor.execute ("select Domain, Active from domains where TopDomainID = (select DomainID from domains where Domain = %s) order by Domain", (update.message.text,))
+
+	data = cursor.fetchall()
+	cursor.close()
+	connection.close()
+
+	subdomains_message = ""
+
+	if not data:
+		subdomains_message = "No subdomains found for " + str(update.message.text)
+
+	if active == True:
+		data = [x for x in data if ord(x[1]) == True]
+
+	if limit == True:
+		print "Limit is True if"
+		data = data[:20]
+
+	for row in data:
+		subdomains_message += "\n" + row[0]
+
+	update.message.reply_text(subdomains_message)
+
+        keyboard = [[InlineKeyboardButton("Data", callback_data='data-' + str(randint(0, 999))),
+                         InlineKeyboardButton("Scans", callback_data='scan-' + str(randint(0, 999)))],
+                        [InlineKeyboardButton("âœ˜ Close", callback_data='close-' + str(randint(0, 999)))]]
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text("Hi again :wave:", reply_markup=reply_markup)
 	return BUTTON
+
+
+
 
 
 def domains_contain(bot, update):
