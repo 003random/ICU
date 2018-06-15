@@ -31,7 +31,7 @@ def start(bot, update):
 
 	keyboard = [[InlineKeyboardButton("Data", callback_data='data-' + str(randint(0, 999))),
 			 InlineKeyboardButton("Scans", callback_data='scan-' + str(randint(0, 999)))],
-			[InlineKeyboardButton("âœ˜ Close", callback_data='close-' + str(randint(0, 999)))]]
+			[InlineKeyboardButton("✘  Close", callback_data='close-' + str(randint(0, 999)))]]
 
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	update.message.reply_text(greeting, reply_markup=reply_markup)
