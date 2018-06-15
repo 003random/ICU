@@ -54,34 +54,34 @@ def button(bot, update):
 	keyboard_2 = [[InlineKeyboardButton("Latest", callback_data='latest-' + r),
 			 InlineKeyboardButton("Custom", callback_data='custom-' + r),
 			 InlineKeyboardButton("Run", callback_data='run-' + r)],
-			[InlineKeyboardButton("Â« Back to catagories", callback_data='back-' + r)]]
+			[InlineKeyboardButton("« Back to catagories", callback_data='back-' + r)]]
 
 	header_3 = "Action:"
 	keyboard_3 = [[InlineKeyboardButton("Add", callback_data='add-' + r),
 			 InlineKeyboardButton("Edit", callback_data='edit-' + r),
 			 InlineKeyboardButton("Get", callback_data='get-' + r)],
-			[InlineKeyboardButton("Â« Back to catagories", callback_data='back-' + r)]]
+			[InlineKeyboardButton("« Back to catagories", callback_data='back-' + r)]]
 
         header_4 = "It looks like a scan is already running. Want to start a new one?"
         keyboard_4 = [[InlineKeyboardButton("Yes", callback_data='yes_scan-' + r),
                          InlineKeyboardButton("No", callback_data='no_scan-' + r)],
-                        [InlineKeyboardButton("Â« Back to scans", callback_data='back_scan-' + r)]]
+                        [InlineKeyboardButton("« Back to scans", callback_data='back_scan-' + r)]]
 
         header_5 = "Action:"
         keyboard_5 = [[InlineKeyboardButton("(top)Domains", callback_data='topdomains-' + r),
                          InlineKeyboardButton("Subdomains", callback_data='subdomains-' + r),
 			 InlineKeyboardButton("Contains", callback_data='contains-' + r)],
-                        [InlineKeyboardButton("Â« Back to data", callback_data='back_data-' + r)]]
+                        [InlineKeyboardButton("« Back to data", callback_data='back_data-' + r)]]
 
         header_6 = "Which type of domains?"
         keyboard_6 = [[InlineKeyboardButton("Active", callback_data='active-' + r),
                          InlineKeyboardButton("All", callback_data='all-' + r)],
-                        [InlineKeyboardButton("Â« Back to actions", callback_data='back_get-' + r)]]
+                        [InlineKeyboardButton("« Back to actions", callback_data='back_get-' + r)]]
 
         header_7 = "How many domains?"
         keyboard_7 = [[InlineKeyboardButton("Top 20", callback_data='limit-' + r),
                          InlineKeyboardButton("All", callback_data='nolimit-' + r)],
-                        [InlineKeyboardButton("Â« Back to actions", callback_data='back_data-' + r)]]
+                        [InlineKeyboardButton("« Back to actions", callback_data='back_data-' + r)]]
 
 
 	#ToDO: Transform into a swtich
@@ -245,7 +245,7 @@ def run_scan(bot, update, cursor):
 	        	header_4 = "It looks like a scan is already running. Want to start a new one?"
         		keyboard_4 = [[InlineKeyboardButton("Yes", callback_data='yes_scan-' + r),
                 		         InlineKeyboardButton("No", callback_data='no_scan-' + r)],
-                        		[InlineKeyboardButton("Â« Back to scans", callback_data='back_scan-' + r)]]
+                        		[InlineKeyboardButton("« Back to scans", callback_data='back_scan-' + r)]]
 			bot.edit_message_text(header_4, reply_markup=InlineKeyboardMarkup(keyboard_4), chat_id=query.message.chat_id, message_id=query.message.message_id)
 			return BUTTON
 	except Exception, e:
