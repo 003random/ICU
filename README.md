@@ -21,7 +21,7 @@ go get github.com/caffix/amass
 go get github.com/Ice3man543/subfinder
 ```
  
- ## Setting up the MySql server
+ ## Setting up the MySQL server
 
 ```
 
