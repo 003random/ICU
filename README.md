@@ -2,32 +2,7 @@
 ICU is a tool to constantly keep an updated database of domains and subdomains, by regularly scanning domains for subdomains with the most common subdomain scanners.  
   
 ICU works by creating a database with domains and a crontask to launch the subdomain scanners script. You can launch this script manually as well. You can also keep control of your domains and subdomains with the main.py script or with the telegram bot. There is also a simple web application that is meant for a quick view of your domains. This web application is not meant yet for a large number of domains.  
-
-# Setting up the MySql server
-```
-$sudo mysql_secure_installation
-Would you like to setup VALIDATE PASSWORD plugin?
-
-Press y|Y for Yes, any other key for No: n
-
-Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
- - Dropping test database...
-Success.
-
- - Removing privileges on test database...
-Success.
-
-Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
-Success.
-
-All done!
-```
+  
     
 # Install 
 ```
@@ -45,8 +20,43 @@ After you've installed GO; Execute the following commands to install Amass and S
 go get github.com/caffix/amass
 go get github.com/Ice3man543/subfinder
 ```
+ 
+ ## Setting up the MySql server
 
+```
 
+$sudo mysql_secure_installation
+
+Would you like to setup VALIDATE PASSWORD plugin?
+
+Press y|Y for Yes, any other key for No: n
+
+Remove anonymous users? (Press y|Y for Yes, any other key for No) : y
+
+Success.
+
+Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y
+
+Success.
+
+Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y
+
+ - Dropping test database...
+
+Success.
+
+ - Removing privileges on test database...
+
+Success.
+
+Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y
+
+Success.
+
+All done!
+
+```
+  
 # Telegram 
 ICU also includes a telegram bot and notifications part. If you want to use this, you will have to include your telegram bot token in credentials.py. You can get a telegram bot token [here]("https://core.telegram.org/bots#3-how-do-i-create-a-bot"). Next off, you need to run setup.py in /telegram, and then send /start to the bot. This will save your chat_id to credentials.py so it can be used for authentication with the bot, and to send the notifications to.  
    
