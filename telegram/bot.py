@@ -206,7 +206,7 @@ def get_latest_scan(bot, update, cursor):
 	cursor.execute("select max(ScanID) from scans where EndDate is not null")
 	data = cursor.fetchall()
 	if data:
-		os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/notify.py " + str(data[0][0]))
+		os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/notify.py " + str(data[0][0]) + " true")
 	else:
 		bot.send_message(text="No completed scans found!", chat_id=query.message.chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
@@ -280,7 +280,7 @@ def custom_scan_id_input(bot, update):
 				print "Valid scan found"
 				reply_markup = telegram.ReplyKeyboardRemove()
 				update.message.reply_text("Showing scan from scan " + str(customId), reply_markup=reply_markup)
-				os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/notify.py " + str(customId))
+				os.system("python " + os.path.dirname(os.path.abspath(__file__))  + "/notify.py " + str(customId) + " true")
 				return ConversationHandler.END
 		else:
 			print "Scan ID not found in db"

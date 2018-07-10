@@ -15,13 +15,21 @@ message = "*" + str(datetime.datetime.now().replace(microsecond=0)) + "*"
 connection = MySQLdb.connect (host = credentials.database_server, user = credentials.database_username, passwd = credentials.database_password, db = credentials.database_name)
 cursor = connection.cursor()
 
-cursor.execute ("select * from domains where scan_Id = %s and Active order by TopDomainID", (scanId))
+cursor.execute ("select Domain from domains where scan_Id = %s and Active order by TopDomainID", (scanId))
 newSubDomains = cursor.fetchall()
 
 cursor.execute ("select * from errors where scan_Id = %s order by ErrorDate", (scanId))
 errors = cursor.fetchall()
 
 connection.close()
+
+display_all = False
+
+try:
+	if sys.argv[2] == "true":
+		display_all = True
+except:
+	print "Not called from bot"
 
 message += "\n_Scan " + str(scanId) + "_"
 
@@ -35,10 +43,12 @@ elif len(errors) == 1:
 if len(errors) > 0:
 	message += "\n--------------"
 
-if len(newSubDomains) > 1:
+if (len(newSubDomains) < 15 and display_all == False) or (len(newSubDomains) < 100 and display_all == True):
 	message += "\n\[+] " + str(len(newSubDomains)) + " New subdomains:"
-elif len(newSubDomains) == 1:
-	message += "\n\[+] " + str(len(newSubDomains)) + " New subdomain:"
+	for domain in newSubDomains:
+		message += "\n" + str(domain[0])
+else:
+	message += "\n\[+] " + str(len(newSubDomains)) + " New subdomains"
 
 message += ""
 
