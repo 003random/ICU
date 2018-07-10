@@ -104,6 +104,8 @@ try:
 except Exception as e:
 	#Handle the errors, and save them to the database
 	print "error in domains_db.py with main domain; " + domain
+	if scanId == "NULL":
+		scanId = None
 	cursor.execute("INSERT INTO errors (Domain, ErrorDescription, Error, Script, scan_Id) VALUES (%s, %s, %s, %s, %s) ", (domain, "error in domains_db.py with main domain; "+domain, e, "sublister_to_db.py", scanId))
 	connection.commit()
 	cursor.close()
